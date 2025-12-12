@@ -1,0 +1,31 @@
+// Fundamental Graphics Functions
+
+#include <graphics.h>
+#include <conio.h>
+
+void main() {
+int gd = DETECT, gm;
+initgraph(&gd, &gm, "C:\TURBOC3\BGI");
+
+setbgcolor(GREEN);
+
+printf("\t\t\t\nLINE");
+line(50, 40, 190, 40);
+
+printf("\t\t\t\nRECTANGLE");
+rectangle(125, 115, 215, 165);
+
+printf("\t\t\t\nARC");
+arc(120, 200, 180, 0, 30);
+
+printf("\t\t\t\nCIRCLE");
+circle(120, 270, 30);
+
+printf("\t\t\t\nELLIPSE");
+ellipse(120, 350, 0, 360, 30, 20);
+
+getch();
+closegraph();
+
+
+}
