@@ -29,3 +29,517 @@ closegraph();
 
 
 }
+
+======================================================================================================================================
+
+EXPERIMENT 2A
+DDA Line Drawing Algorithm
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+#include <stdio.h>
+#include <math.h>
+
+void main() {
+int gd = DETECT, gm, i;
+float x1, y1, x2, y2, dx, dy, steps;
+float x, y, xinc, yinc;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter x1 y1: ");
+scanf("%f %f", &x1, &y1);
+
+printf("Enter x2 y2: ");
+scanf("%f %f", &x2, &y2);
+
+dx = x2 - x1;
+dy = y2 - y1;
+
+if (abs(dx) > abs(dy))
+    steps = abs(dx);
+else
+    steps = abs(dy);
+
+xinc = dx / steps;
+yinc = dy / steps;
+
+x = x1;
+y = y1;
+
+for (i = 0; i <= steps; i++) {
+    putpixel(x, y, WHITE);
+    x += xinc;
+    y += yinc;
+}
+
+getch();
+closegraph();
+
+
+}
+
+
+============================================================
+
+
+EXPERIMENT 2B
+Bresenham Line Drawing Algorithm
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+#include <stdio.h>
+
+void main() {
+int gd = DETECT, gm;
+int x1, y1, x2, y2, dx, dy, p, x, y;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter x1 y1: ");
+scanf("%d %d", &x1, &y1);
+
+printf("Enter x2 y2: ");
+scanf("%d %d", &x2, &y2);
+
+dx = x2 - x1;
+dy = y2 - y1;
+
+p = 2 * dy - dx;
+x = x1;
+y = y1;
+
+while (x <= x2) {
+    putpixel(x, y, WHITE);
+
+    if (p < 0)
+        p = p + 2 * dy;
+    else {
+        p = p + 2 * (dy - dx);
+        y++;
+    }
+
+    x++;
+}
+
+getch();
+closegraph();
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 3A
+Bresenham Circle Drawing Algorithm
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+
+void plotPoints(int xc, int yc, int x, int y) {
+putpixel(xc + x, yc + y, WHITE);
+putpixel(xc - x, yc + y, WHITE);
+putpixel(xc + x, yc - y, WHITE);
+putpixel(xc - x, yc - y, WHITE);
+putpixel(xc + y, yc + x, WHITE);
+putpixel(xc - y, yc + x, WHITE);
+putpixel(xc + y, yc - x, WHITE);
+putpixel(xc - y, yc - x, WHITE);
+}
+
+void main() {
+int gd = DETECT, gm;
+int xc, yc, r;
+int x, y, d;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter center xc yc: ");
+scanf("%d %d", &xc, &yc);
+
+printf("Enter radius: ");
+scanf("%d", &r);
+
+x = 0;
+y = r;
+d = 3 - 2 * r;
+
+while (x <= y) {
+    plotPoints(xc, yc, x, y);
+
+    if (d < 0)
+        d += (4 * x) + 6;
+    else {
+        d += (4 * (x - y)) + 10;
+        y--;
+    }
+
+    x++;
+}
+
+getch();
+closegraph();
+
+
+}
+
+============================================================
+
+EXPERIMENT 3B
+Midpoint Circle Drawing Algorithm
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+
+void plotPoints(int xc, int yc, int x, int y) {
+putpixel(xc + x, yc + y, WHITE);
+putpixel(xc - x, yc + y, WHITE);
+putpixel(xc + x, yc - y, WHITE);
+putpixel(xc - x, yc - y, WHITE);
+putpixel(xc + y, yc + x, WHITE);
+putpixel(xc - y, yc + x, WHITE);
+putpixel(xc + y, yc - x, WHITE);
+putpixel(xc - y, yc - x, WHITE);
+}
+
+void main() {
+int gd = DETECT, gm;
+int xc, yc, r;
+int x = 0, y, d;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter center xc yc: ");
+scanf("%d %d", &xc, &yc);
+
+printf("Enter radius: ");
+scanf("%d", &r);
+
+y = r;
+d = 1 - r;
+
+while (x <= y) {
+    plotPoints(xc, yc, x, y);
+
+    if (d < 0)
+        d += 2 * x + 3;
+    else {
+        d += 2 * (x - y) + 5;
+        y--;
+    }
+
+    x++;
+}
+
+getch();
+closegraph();
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 4A
+2D Transformation (Scaling)
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+#include <iostream>
+using namespace std;
+
+int n, x[100], y[100];
+float sfx, sfy;
+
+void drawPoly() {
+for (int i = 0; i < n; i++)
+line(x[i], y[i], x[(i+1) % n], y[(i+1) % n]);
+}
+
+void scale() {
+int x0 = x[0], y0 = y[0];
+for (int i = 0; i < n; i++) {
+x[i] = x0 + (x[i] - x0) * sfx;
+y[i] = y0 + (y[i] - y0) * sfy;
+}
+}
+
+int main() {
+int gd = DETECT, gm;
+initgraph(&gd, &gm, "C:\TURBOC3\BGI");
+
+cout << "Enter number of vertices: ";
+cin >> n;
+
+for (int i = 0; i < n; i++)
+    cin >> x[i] >> y[i];
+
+drawPoly();
+
+cout << "Enter scale factors sfx sfy: ";
+cin >> sfx >> sfy;
+
+setcolor(YELLOW);
+scale();
+drawPoly();
+
+getch();
+closegraph();
+return 0;
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 4B
+3D Rotation (bar3d Transformation)
+
+Program:
+
+#include <graphics.h>
+#include <conio.h>
+#include <math.h>
+#include <stdio.h>
+
+int main() {
+int gd = DETECT, gm;
+int x1, y1, x2, y2, mx, my, depth;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter top-left x1 y1: ");
+scanf("%d %d", &x1, &y1);
+
+printf("Enter bottom-right x2 y2: ");
+scanf("%d %d", &x2, &y2);
+
+mx = (x1 + x2) / 2;
+my = (y1 + y2) / 2;
+depth = (x2 - x1) / 4;
+
+bar3d(x1, y1, x2, y2, depth, 1);
+
+float angle;
+printf("Enter rotation angle: ");
+scanf("%f", &angle);
+
+float t = angle * 3.14 / 180;
+
+int nx1 = mx + (x1 - mx)*cos(t) - (y1 - my)*sin(t);
+int ny1 = my + (x1 - mx)*sin(t) + (y1 - my)*cos(t);
+
+int nx2 = mx + (x2 - mx)*cos(t) - (y2 - my)*sin(t);
+int ny2 = my + (x2 - mx)*sin(t) + (y2 - my)*cos(t);
+
+setcolor(RED);
+bar3d(nx1, ny1, nx2, ny2, depth, 1);
+
+getch();
+closegraph();
+return 0;
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 5
+Cohen–Sutherland Line Clipping
+
+Program:
+
+#include <graphics.h>
+#include <stdio.h>
+#include <conio.h>
+
+#define LEFT 1
+#define RIGHT 2
+#define BOTTOM 4
+#define TOP 8
+
+int xmin, ymin, xmax, ymax;
+
+int getCode(int x, int y) {
+int code = 0;
+if (x < xmin) code |= LEFT;
+if (x > xmax) code |= RIGHT;
+if (y < ymin) code |= BOTTOM;
+if (y > ymax) code |= TOP;
+return code;
+}
+
+void main() {
+int gd = DETECT, gm;
+int x1, y1, x2, y2;
+float x, y, m;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter window xmin ymin xmax ymax: ");
+scanf("%d %d %d %d", &xmin, &ymin, &xmax, &ymax);
+
+rectangle(xmin, ymin, xmax, ymax);
+
+printf("Enter line endpoints x1 y1 x2 y2: ");
+scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
+
+m = (float)(y2 - y1) / (x2 - x1);
+
+int c1 = getCode(x1, y1);
+int c2 = getCode(x2, y2);
+
+int accept = 0;
+
+while (1) {
+    if (c1 == 0 && c2 == 0) {
+        accept = 1;
+        break;
+    }
+    else if (c1 & c2) {
+        break;
+    }
+    else {
+        int codeOut = (c1 != 0) ? c1 : c2;
+
+        if (codeOut & TOP) {
+            y = ymax;
+            x = x1 + (y - y1) / m;
+        }
+        else if (codeOut & BOTTOM) {
+            y = ymin;
+            x = x1 + (y - y1) / m;
+        }
+        else if (codeOut & RIGHT) {
+            x = xmax;
+            y = y1 + m * (x - x1);
+        }
+        else if (codeOut & LEFT) {
+            x = xmin;
+            y = y1 + m * (x - x1);
+        }
+
+        if (codeOut == c1) {
+            x1 = x; y1 = y;
+            c1 = getCode(x1, y1);
+        }
+        else {
+            x2 = x; y2 = y;
+            c2 = getCode(x2, y2);
+        }
+    }
+}
+
+if (accept)
+    line(x1, y1, x2, y2);
+
+getch();
+closegraph();
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 6
+Bezier Curve
+
+Program:
+
+#include <graphics.h>
+#include <math.h>
+#include <conio.h>
+#include <stdio.h>
+
+void main() {
+int x[4], y[4], i;
+double t, px, py;
+int gd = DETECT, gm;
+
+initgraph(&gd, &gm, "C:\\TURBOC3\\BGI");
+
+printf("Enter 4 control points:\n");
+for (i = 0; i < 4; i++) {
+    scanf("%d %d", &x[i], &y[i]);
+    putpixel(x[i], y[i], WHITE);
+}
+
+for (t = 0.0; t <= 1.0; t += 0.001) {
+    px = pow(1-t, 3)*x[0] +
+         3*t*pow(1-t, 2)*x[1] +
+         3*t*t*(1-t)*x[2] +
+         pow(t, 3)*x[3];
+
+    py = pow(1-t, 3)*y[0] +
+         3*t*pow(1-t, 2)*y[1] +
+         3*t*t*(1-t)*y[2] +
+         pow(t, 3)*y[3];
+
+    putpixel(px, py, WHITE);
+}
+
+getch();
+closegraph();
+
+
+}
+
+============================================================
+
+
+EXPERIMENT 7
+2D Rotation Animation (Flash/Maya)
+
+Steps:
+
+Draw a fan blade in Layer 1 and convert it into a symbol.
+
+Draw a ball in the same layer and convert it into a symbol.
+
+Insert a new layer and arrange blades using symbols.
+
+Convert the entire fan into one symbol.
+
+Open Insert → Timeline Effects → Transform → Transition.
+
+Set rotation angle to 90° and press OK.
+
+Adjust frame rate.
+
+Play the animation using Control → Test Movie.
+
+============================================================
+
+
+EXPERIMENT 8
+Bouncing Ball Animation (Flash/Maya)
+
+Steps:
+
+Draw a rectangle in Layer 1.
+
+Insert Layer 2 and draw a ball.
+
+Convert the ball into a symbol and name it.
+
+At frame 20, copy & paste the ball to a new position and add Motion Tween.
+
+Repeat steps at frames 40, 60, 80,… for bounce movement.
+
+Test movie using Control → Test Movie.
+
+Adjust frame rate if required.
